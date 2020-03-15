@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using IdentityModel;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 [Route("auth")]
 public class AuthController : ControllerBase
 {
-    private IAuthService _authService;
-    public AuthController(IAuthService authServ)
-    {
-        this._authService = authServ;
-    }
+  
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] ModelAuth authData)
     {
@@ -23,20 +20,16 @@ public class AuthController : ControllerBase
         }
         var client = new HttpClient();
         var disco = await client.GetDiscoveryDocumentAsync("http://localhost:5000");
-        bool isExit = this._authService.auth(authData.email, authData.password);
-        if(!isExit)
-        {
-            return  BadRequest("Wrong password or password");
-        }
-
-
-        var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+      
+        var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
         {
             Address = disco.TokenEndpoint,
-
             ClientId = "client",
+            GrantType = "password",
             ClientSecret = "secret",
-            Scope = "api1"
+            Scope = "api1",
+            UserName = authData.email,
+            Password = authData.password.ToSha256()
         });
 
         if (tokenResponse.IsError)

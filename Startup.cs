@@ -39,7 +39,6 @@ namespace Api
                         });
            });
             services.AddControllers();
-            services.AddScoped<IAuthService, AuthService>();
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
