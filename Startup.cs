@@ -16,6 +16,8 @@ namespace Api
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 
         public Startup(IConfiguration configuration)
         {
@@ -26,7 +28,18 @@ namespace Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+           {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                        {
+                            builder.WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                        });
+           });
             services.AddControllers();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -50,6 +63,10 @@ namespace Api
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // CORS
+            app.UseCors(MyAllowSpecificOrigins); 
+
 
             app.UseEndpoints(endpoints =>
             {

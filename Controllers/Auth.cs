@@ -9,11 +9,25 @@ using Microsoft.AspNetCore.Mvc;
 [Route("auth")]
 public class AuthController : ControllerBase
 {
-    [HttpGet]
-    public async Task<string>  Get()
+    private IAuthService _authService;
+    public AuthController(IAuthService authServ)
     {
+        this._authService = authServ;
+    }
+    [HttpPost]
+    public async Task<IActionResult> Post([FromBody] ModelAuth authData)
+    {
+        if(!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         var client = new HttpClient();
         var disco = await client.GetDiscoveryDocumentAsync("http://localhost:5000");
+        bool isExit = this._authService.auth(authData.email, authData.password);
+        if(!isExit)
+        {
+            return  BadRequest("Wrong password or password");
+        }
 
 
         var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
@@ -34,6 +48,8 @@ public class AuthController : ControllerBase
         Console.WriteLine(tokenResponse.Json);
 
         // return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
-        return tokenResponse.Raw;
+        return Ok(new {token = tokenResponse.AccessToken});
+
     }
+   
 }
