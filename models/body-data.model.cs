@@ -1,9 +1,3 @@
-//    public waist: number;
-//     public date_create: Date | null;
-//     public date_update: Date | null;
-//     public id: number | null;
-//     public weight: number;
-//     public user_id: number;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 

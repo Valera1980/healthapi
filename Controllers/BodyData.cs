@@ -28,4 +28,12 @@ public class BodyDataController : ControllerBase
         var data = await this._ctx.BodyData.Where(bodyData => bodyData.UserId == id).ToListAsync();
         return Ok(data);
     }
+    [HttpPost]
+    [Route("create")]
+    public async Task<IActionResult> createBodyDataItem([FromBody] BodyData b)
+    {
+        await this._ctx.BodyData.AddAsync(b);
+        var save = await this._ctx.SaveChangesAsync();
+        return  Ok(save);
+    }
 }
