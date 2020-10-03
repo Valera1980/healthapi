@@ -3,15 +3,17 @@ using System;
 using HealthApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Api.Migrations
 {
     [DbContext(typeof(AppMainContext))]
-    partial class AppMainContextModelSnapshot : ModelSnapshot
+    [Migration("20201003090447_RemobeTemporaryDateUpdateColumnTwo")]
+    partial class RemobeTemporaryDateUpdateColumnTwo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

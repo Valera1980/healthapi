@@ -3,15 +3,17 @@ using System;
 using HealthApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Api.Migrations
 {
     [DbContext(typeof(AppMainContext))]
-    partial class AppMainContextModelSnapshot : ModelSnapshot
+    [Migration("20201003085933_RemobeTemporaryDateUpdateColumn")]
+    partial class RemobeTemporaryDateUpdateColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +29,6 @@ namespace Api.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("DateCreation")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime>("DateUpdate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("UserId")
