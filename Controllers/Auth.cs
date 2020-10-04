@@ -10,17 +10,22 @@ using Microsoft.AspNetCore.Mvc;
 [Route("auth")]
 public class AuthController : ControllerBase
 {
-  
+    private IUserRepository _users;
+
+    public AuthController(IUserRepository usersRep)
+    {
+        this._users = usersRep;
+    }
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] ModelAuth authData)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
         var client = new HttpClient();
         var disco = await client.GetDiscoveryDocumentAsync("http://localhost:5000");
-      
+
         var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
         {
             Address = disco.TokenEndpoint,
@@ -38,11 +43,13 @@ public class AuthController : ControllerBase
             // return;
         }
 
+
+        User user = await _users.getUser(authData.email);
         Console.WriteLine(tokenResponse.Json);
 
         // return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
-        return Ok(new {token = tokenResponse.AccessToken});
+        return Ok(new { token = tokenResponse.AccessToken, user = new User{Name=user.Name} });
 
     }
-   
+
 }
