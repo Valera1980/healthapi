@@ -51,6 +51,7 @@ namespace Api
 
             // DI
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IBodyDataRepository, BodyDataRepository>();
 
         }
 
