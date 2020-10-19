@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
         Console.WriteLine(tokenResponse.Json);
 
         // return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
-        return Ok(new { token = tokenResponse.AccessToken, user = new User{Name=user.Name} });
+        return Ok(new { token = tokenResponse.AccessToken, user = new User { Name = user.Name, Id = user.Id, Email = user.Email } });
 
     }
 

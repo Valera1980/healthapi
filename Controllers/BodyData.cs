@@ -10,12 +10,12 @@ using Microsoft.EntityFrameworkCore;
 public class BodyDataController : ControllerBase
 {
     private AppMainContext _ctx;
-    private IBodyDataRepository _bdataRepo;
+    private IBodyDataTable _dataTableService;
 
-    public BodyDataController(AppMainContext ctx, IBodyDataRepository bdRepo)
+    public BodyDataController(AppMainContext ctx, IBodyDataTable dataTableService)
     {
         this._ctx = ctx;
-        this._bdataRepo = bdRepo;
+        this._dataTableService = dataTableService;
     }
     [HttpGet]
     public async Task<IActionResult> getAll()
@@ -42,8 +42,8 @@ public class BodyDataController : ControllerBase
     [Route("table")]
     public async Task<IActionResult> queryBodyDataTable([FromBody] ParamsBodyDataTable p)
     {
-        int count = await this._bdataRepo.getCount(p.UserId);
-        List<BodyData> data = await this._ctx.BodyData.Where(bodyData => bodyData.UserId == p.UserId).ToListAsync();
+        int count = await this._dataTableService.getCount(p.UserId);
+        List<BodyData> data = await this._dataTableService.getDataByUserId(p.UserId);
         return Ok(
             new WrapperPagination<List<BodyData>>
             {
