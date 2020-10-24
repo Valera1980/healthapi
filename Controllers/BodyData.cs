@@ -43,7 +43,7 @@ public class BodyDataController : ControllerBase
     public async Task<IActionResult> queryBodyDataTable([FromBody] ParamsBodyDataTable p)
     {
         int count = await this._dataTableService.getCount(p.UserId);
-        List<BodyData> data = await this._dataTableService.getDataByUserId(p.UserId);
+        List<BodyData> data = await this._dataTableService.getPaginationData(p.CurrentPage, p.PageSize, p.UserId);
         return Ok(
             new WrapperPagination<List<BodyData>>
             {

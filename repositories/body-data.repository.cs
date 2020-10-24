@@ -9,7 +9,8 @@ public interface IBodyDataRepository
 {
     Task<int> getCount(int userId);
     Task<List<BodyData>> getDataByUserId(int userId);
-
+   Task<List<BodyData>> getPaginationData(int currentPage, int pageSize, int userId);
+ 
 }
 public class BodyDataRepository : IBodyDataRepository
 {
@@ -26,6 +27,12 @@ public class BodyDataRepository : IBodyDataRepository
     public async Task<List<BodyData>> getDataByUserId(int userId)
     {
         return await this._ctx.BodyData.Where(bodyData => bodyData.UserId == userId).ToListAsync();
+    }
+
+    public async Task<List<BodyData>> getPaginationData(int currentPage, int pageSize, int userId)
+    {
+       var data = await this._ctx.BodyData.Skip((currentPage - 1) * pageSize).Take(pageSize).ToListAsync();
+       return data;
     }
 
 }

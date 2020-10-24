@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 public interface IBodyDataTable
 {
     Task<int> getCount(int userId);
-   Task<List<BodyData>> getDataByUserId(int userId);
+    Task<List<BodyData>> getDataByUserId(int userId);
+    Task<List<BodyData>> getPaginationData(int currentPage, int pageSize, int userId);
 }
 public class BodyDataTableService : IBodyDataTable
 {
@@ -23,5 +24,9 @@ public class BodyDataTableService : IBodyDataTable
     public async Task<List<BodyData>> getDataByUserId(int userId)
     {
         return await this._repo.getDataByUserId(userId);
+    }
+    public async Task<List<BodyData>> getPaginationData(int currentPage, int pageSize, int userId)
+    {
+        return await this._repo.getPaginationData(currentPage, pageSize, userId);
     }
 }
