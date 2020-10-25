@@ -33,7 +33,8 @@ namespace Api
                 options.AddPolicy(MyAllowSpecificOrigins,
                 builder =>
                         {
-                            builder.WithOrigins("http://localhost:3000")
+                            builder.WithOrigins("http://localhost:3000","http://192.168.1.194:3000", "'http://172.17.0.2")
+                            .AllowAnyOrigin()
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                         });
