@@ -30,15 +30,16 @@ namespace Api
         {
             services.AddCors(options =>
            {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
-                        {
-                            builder.WithOrigins("http://localhost:3000","http://192.168.1.194:3000", "'http://172.17.0.2")
-                            .AllowAnyOrigin()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                        });
+               options.AddPolicy(MyAllowSpecificOrigins,
+               builder =>
+                       {
+                           builder.WithOrigins("http://localhost:3000", "http://192.168.1.194:3000", "'http://172.17.0.2")
+                           .AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                       });
            });
+            services.AddHttpClient();
             services.AddControllers();
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
@@ -70,7 +71,7 @@ namespace Api
             app.UseAuthorization();
 
             // CORS
-            app.UseCors(MyAllowSpecificOrigins); 
+            app.UseCors(MyAllowSpecificOrigins);
 
 
             app.UseEndpoints(endpoints =>
