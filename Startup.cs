@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 
 namespace Api
 {
@@ -55,6 +56,7 @@ namespace Api
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBodyDataRepository, BodyDataRepository>();
             services.AddScoped<IBodyDataTable, BodyDataTableService>();
+
 
         }
 

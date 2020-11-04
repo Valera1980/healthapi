@@ -13,10 +13,10 @@ namespace Api
     {
         public static void Main(string[] args)
         {
-            UsersHttpRequest.queryUsers();
+
             CreateHostBuilder(args).Build().Run();
 
-            
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -24,6 +24,7 @@ namespace Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    UsersHttpRequest.queryUsers();
                 });
     }
 }

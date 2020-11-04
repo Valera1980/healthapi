@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -5,29 +6,41 @@ using System.Threading.Tasks;
 
 public static class UsersHttpRequest
 {
-    // private readonly IHttpClientFactory _clientFactory;
-
-    // public UsersHttpRequest(IHttpClientFactory clientFactory)
-    // {
-    //     _clientFactory = clientFactory;
-    // }
 
     public async static void queryUsers()
     {
-        HttpClient httpClient =  new HttpClient();
-        var response = await httpClient.GetAsync( "http://localhost:5000/users");
-        var rawContent = await response.Content.ReadAsStringAsync();
+        HttpClient httpClient = new HttpClient();
+        try
+        {
+            var response = await httpClient.GetAsync("http://localhost:5000/users");
+            var rawContent = await response.Content.ReadAsStringAsync();
+            List<User> users = _deserialize(rawContent);
+        }
+        catch (HttpRequestException ex)
+        {
+            System.Console.WriteLine("============================");
+            System.Console.WriteLine(ex.Message);
+        }
 
-        var ii = "ttt";
+    }
+    private static List<User> _deserialize(string rawContent)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 
-        // var request = new HttpRequestMessage(HttpMethod.Get,
-        //             "http://localhost:5000/users");
-        // var client = _clientFactory.CreateClient();
-        // var response = await client.SendAsync(request);
-        //  if (response.IsSuccessStatusCode)
-        // {
-        //     using var responseStream = await response.Content.ReadAsStreamAsync();
-        //     var users = await JsonSerializer.DeserializeAsync<IEnumerable<User>>(responseStream);
-        // }
+        };
+        try
+        {
+            List<User> users = JsonSerializer.Deserialize<List<User>>(rawContent, options);
+            return users;
+        }
+        catch (SystemException ex)
+        {
+            System.Console.WriteLine("============================");
+            System.Console.WriteLine(ex.Message);
+            return new List<User> { };
+        }
+
     }
 }
