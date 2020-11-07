@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,11 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 [Route("auth")]
 public class AuthController : ControllerBase
 {
-    private IUserRepository _users;
+    private IUserService _users;
 
-    public AuthController(IUserRepository usersRep)
+
+    public AuthController(IUserService usersService)
     {
-        this._users = usersRep;
+        this._users = usersService;
     }
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] ModelAuth authData)
@@ -43,11 +45,12 @@ public class AuthController : ControllerBase
             // return;
         }
 
+        List<User> users = await this._users.queryUsers();
+        this._users.users = users;
+        User user = this._users.findUserByEmail(authData.email);
 
-        User user = await _users.getUser(authData.email);
         Console.WriteLine(tokenResponse.Json);
 
-        // return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         return Ok(new { token = tokenResponse.AccessToken, user = new User { Name = user.Name, Id = user.Id, Email = user.Email } });
 
     }

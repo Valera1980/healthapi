@@ -24,7 +24,6 @@ namespace Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    UsersHttpRequest.queryUsers();
                 });
     }
 }
