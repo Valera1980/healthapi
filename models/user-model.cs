@@ -9,6 +9,9 @@ public class User
     public int Age { get; set; }
     public string Password { get; set; }
     public bool Male { get; set; }
-    public List<BodyData> BodyData {get; set;}
+    
+    public bool isEmailConfirmed { get; set; }
+
+    public List<BodyData> BodyData { get; set; }
 
 }
