@@ -51,7 +51,7 @@ public class AuthController : ControllerBase
 
         Console.WriteLine(tokenResponse.Json);
 
-        return Ok(new { token = tokenResponse.AccessToken, user = new User { Name = user.Name, Id = user.Id, Email = user.Email } });
+        return Ok(new { token = tokenResponse.AccessToken, user = new ModelUserView { Name = user.Name, Id = user.Id, Email = user.Email } });
 
     }
 
