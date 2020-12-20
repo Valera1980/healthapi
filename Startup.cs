@@ -29,6 +29,11 @@ namespace Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+
+
+            System.Console.WriteLine(" >>>>>>>>>>>>>>>>> Configuration <<<<<<<<<<<<<<<<");
+            System.Console.WriteLine(Configuration.GetValue<string>("IdentityServer:url"));
+
             services.AddCors(options =>
            {
                options.AddPolicy(MyAllowSpecificOrigins,
@@ -45,25 +50,33 @@ namespace Api
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Authority = "http://localhost:5000";
+                    options.Authority = Configuration.GetValue<string>("IdentityServer:url");
                     options.RequireHttpsMetadata = false;
-
                     options.Audience = "api1";
                 });
-            services.AddDbContext<AppMainContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            try
+            {
 
+                services.AddDbContext<AppMainContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("data base connection error");
+                System.Console.WriteLine(ex.Message);
+            }
             // DI
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UsersService>();
             services.AddScoped<IBodyDataRepository, BodyDataRepository>();
             services.AddScoped<IBodyDataTable, BodyDataTableService>();
 
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

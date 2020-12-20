@@ -5,16 +5,26 @@ using System.Threading.Tasks;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 [Route("identity")]
 // [Authorize]
 public class IdentityController : ControllerBase
 {
+    private readonly IConfiguration _conf;
+    public IdentityController(IConfiguration conf)
+    {
+      _conf = conf;
+    }
     [HttpGet]
     public async Task<string>  Get()
     {
         var client = new HttpClient();
-        var disco = await client.GetDiscoveryDocumentAsync("http://localhost:5000");
+        var disco = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest()
+        {
+            Address = _conf.GetValue<string>("IdentityServer:url"),
+            Policy = { RequireHttps = false}
+        });
 
 
         var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
