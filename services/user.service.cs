@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +37,6 @@ public class UsersService : IUserService
             System.Console.WriteLine(" === Exception === ", ex.Message);
             return new List<User> { };
         }
-
     }
     private List<User> _deserialize(string rawContent)
     {
@@ -50,11 +50,10 @@ public class UsersService : IUserService
             List<User> users = JsonSerializer.Deserialize<List<User>>(rawContent, options);
             return users;
         }
-        catch (SystemException ex)
+        catch (AmbiguousMatchException)
         {
-            throw ex;
+            throw;
         }
-
     }
     public User findUserByEmail(string email)
     {

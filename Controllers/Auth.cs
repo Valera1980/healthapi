@@ -19,7 +19,7 @@ public class AuthController : ControllerBase
 
 
     public AuthController(
-        IUserService usersService, 
+        IUserService usersService,
         ILogger<AuthController> logger,
         IConfiguration configuration
         )
@@ -46,10 +46,11 @@ public class AuthController : ControllerBase
                     RequireHttps = false,
                 }
             });
-            if (disco.IsError) throw new Exception(disco.Error);
+            if (disco.IsError)
+            {
+                throw new Exception(disco.Error);
+            }
 
-            System.Console.WriteLine("============= disco ====================");
-            System.Console.WriteLine(disco.TokenEndpoint.ToString());
             var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = disco.TokenEndpoint,
@@ -61,29 +62,20 @@ public class AuthController : ControllerBase
                 Password = authData.password.ToSha256()
             });
 
-            System.Console.WriteLine("============= tokenResponse ====================");
-            System.Console.WriteLine(tokenResponse.Error);
 
             if (tokenResponse.IsError)
             {
-                Console.WriteLine("========== token error ==================");
-                Console.WriteLine(tokenResponse);
-                // return;
+                throw new Exception(tokenResponse.Error);
             }
 
             List<User> users = await this._users.queryUsers();
             this._users.users = users;
             User user = this._users.findUserByEmail(authData.email);
 
-            Console.WriteLine("+++++++++++++++user++++++++++++++++++++=");
-            Console.WriteLine(user);
-
             return Ok(new { token = tokenResponse.AccessToken, user = new ModelUserView { Name = user.Name, Id = user.Id, Email = user.Email } });
         }
         catch (Exception ex)
         {
-            Console.WriteLine("========== controller error ==================");
-            Console.WriteLine(ex);
             return BadRequest(ex.Message);
         }
 

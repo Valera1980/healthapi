@@ -30,10 +30,6 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-
-            System.Console.WriteLine(" >>>>>>>>>>>>>>>>> Configuration <<<<<<<<<<<<<<<<");
-            System.Console.WriteLine(Configuration.GetValue<string>("IdentityServer:url"));
-
             services.AddCors(options =>
            {
                options.AddPolicy(MyAllowSpecificOrigins,
